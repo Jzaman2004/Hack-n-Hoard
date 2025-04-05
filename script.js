@@ -395,6 +395,38 @@ window.addEventListener('keyup', (e) => {
     keysPressed[e.key] = false;
 });
 
+// Reference to on-screen control buttons
+const btnUp = document.getElementById('btn-up');
+const btnDown = document.getElementById('btn-down');
+const btnLeft = document.getElementById('btn-left');
+const btnRight = document.getElementById('btn-right');
+
+// Simulate key presses when buttons are pressed
+btnUp.addEventListener('touchstart', () => { keysPressed['ArrowUp'] = true; });
+btnUp.addEventListener('touchend', () => { keysPressed['ArrowUp'] = false; });
+
+btnDown.addEventListener('touchstart', () => { keysPressed['ArrowDown'] = true; });
+btnDown.addEventListener('touchend', () => { keysPressed['ArrowDown'] = false; });
+
+btnLeft.addEventListener('touchstart', () => { keysPressed['ArrowLeft'] = true; });
+btnLeft.addEventListener('touchend', () => { keysPressed['ArrowLeft'] = false; });
+
+btnRight.addEventListener('touchstart', () => { keysPressed['ArrowRight'] = true; });
+btnRight.addEventListener('touchend', () => { keysPressed['ArrowRight'] = false; });
+
+// Optional: Add mouse click support for desktop users
+btnUp.addEventListener('mousedown', () => { keysPressed['ArrowUp'] = true; });
+btnUp.addEventListener('mouseup', () => { keysPressed['ArrowUp'] = false; });
+
+btnDown.addEventListener('mousedown', () => { keysPressed['ArrowDown'] = true; });
+btnDown.addEventListener('mouseup', () => { keysPressed['ArrowDown'] = false; });
+
+btnLeft.addEventListener('mousedown', () => { keysPressed['ArrowLeft'] = true; });
+btnLeft.addEventListener('mouseup', () => { keysPressed['ArrowLeft'] = false; });
+
+btnRight.addEventListener('mousedown', () => { keysPressed['ArrowRight'] = true; });
+btnRight.addEventListener('mouseup', () => { keysPressed['ArrowRight'] = false; });
+
 // Initialize game
 async function initGame() {
     mapData = await loadMap('assets/maps/world01.txt'); // Ensure this path is correct
