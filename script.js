@@ -20,7 +20,7 @@ window.addEventListener('resize', resizeCanvas);
 
 // Function to dynamically calculate tileSize
 function getTileSize() {
-    return Math.round(canvas.width / 16/2); // Divide by 16 for zoom-out
+    return Math.round(canvas.width / 32); // Divide by 16 for zoom-out
 }
 
 // Game variables
