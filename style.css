@@ -1,21 +1,54 @@
+/* General Body Styling */
 body {
     margin: 0;
-    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Prevent scrolling */
 }
 
+/* Header Bar */
+#game-header {
+    width: 100%;
+    background-color: #1a1a1a; /* Dark gray background */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    position: fixed; /* Fixed position at the top */
+    top: 0;
+    left: 0;
+    z-index: 100; /* Ensure it's above other elements */
+}
+
+#game-header h1 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: 2px; /* Add spacing between letters */
+    text-transform: uppercase; /* Convert text to uppercase */
+}
+
+/* Game Canvas */
 #gameCanvas {
     display: block;
     background-color: black;
+    margin-top: 60px; /* Offset for the header bar */
 }
 
+/* UI Elements */
 #ui {
     position: absolute;
-    top: 10px;
+    top: 70px; /* Adjusted for the header */
     left: 10px;
-    color: white;
-    font-family: Arial, sans-serif;
+    z-index: 10;
 }
 
-#key-count, #time, #message {
-    margin-bottom: 5px;
+#ui p {
+    margin: 5px 0;
 }

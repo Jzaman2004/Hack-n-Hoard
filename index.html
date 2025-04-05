@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Adventure Game</title>
+    <title>Hack n Hoard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Header Bar -->
+    <header id="game-header">
+        <h1>Hack n Hoard</h1>
+    </header>
+
+    <!-- Game Canvas -->
     <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Elements -->
     <div id="ui">
-        <div id="key-count">Keys: 0</div>
-        <div id="time">Time: 0.00</div>
-        <div id="message"></div>
+        <p id="key-count">Keys: 0</p>
+        <p id="time">Time: 0.00</p>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
