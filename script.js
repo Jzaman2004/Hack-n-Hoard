@@ -42,14 +42,8 @@ let player = {
     spriteCounter: 0,
     spriteNum: 1,
     solidArea: { x: 8, y: 16, width: 32, height: 32 },
-    // New properties for spell and sword animations
-    isCastingSpell: false,
-    spellFrame: 1, // Alternates between 1 and 2
-    isSwingingSword: false,
-    swordFrame: 1, // Alternates between 1 and 2
 };
 
-// Load assets
 // Load assets
 const assets = {
     player: {
@@ -76,31 +70,6 @@ const assets = {
         boots: new Image(),
         chest: new Image(),
     },
-    spells: {
-        spell1: new Image(),
-        spell2: new Image(),
-    },
-    swords: {
-        sword1: new Image(),
-        sword2: new Image(),
-    },
-};
-
-// Load spell and sword images
-assets.spells.spell1.src = 'assets/images/spell1.png';
-assets.spells.spell2.src = 'assets/images/spell2.png';
-assets.swords.sword1.src = 'assets/images/sword1.png';
-assets.swords.sword2.src = 'assets/images/sword2.png';
-
-// Load spell and sword sounds
-const sounds = {
-    background: new Audio('assets/sounds/background.wav'),
-    coin: new Audio('assets/sounds/coin.wav'),
-    unlock: new Audio('assets/sounds/unlock.wav'),
-    powerup: new Audio('assets/sounds/powerup.wav'),
-    fanfare: new Audio('assets/sounds/fanfare.wav'),
-    spell: new Audio('assets/sounds/spell.wav'),
-    sword: new Audio('assets/sounds/sword.wav'),
 };
 
 // Load player images
@@ -264,7 +233,6 @@ function pickUpObject(obj) {
     }
 }
 
-
 // Remove object from the game
 function removeObject(obj) {
     if (!obj) return;
@@ -317,6 +285,7 @@ function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
 }
 
+// Update game state
 function update(deltaTime) {
     let newX = player.x;
     let newY = player.y;
@@ -351,48 +320,25 @@ function update(deltaTime) {
     }
 
     const collidedObject = checkObjectCollision(player, objects);
+    console.log("Collided object:", collidedObject); // Debugging line
     pickUpObject(collidedObject);
 
-    // Update spell animation (q key)
-    if (keysPressed['q']) {
-        player.isCastingSpell = true;
-        player.spriteCounter++;
-        if (player.spriteCounter > 10) {
-            player.spellFrame = player.spellFrame === 1 ? 2 : 1;
-            player.spriteCounter = 0;
-            playSound(sounds.spell); // Play spell sound
-        }
-    } else {
-        player.isCastingSpell = false;
-    }
-
-    // Update sword animation (e key)
-    if (keysPressed['e']) {
-        player.isSwingingSword = true;
-        player.spriteCounter++;
-        if (player.spriteCounter > 10) {
-            player.swordFrame = player.swordFrame === 1 ? 2 : 1;
-            player.spriteCounter = 0;
-            playSound(sounds.sword); // Play sword sound
-        }
-    } else {
-        player.isSwingingSword = false;
-    }
-
-    // Update walking animation only if the player is moving
-    if (isMoving && !player.isCastingSpell && !player.isSwingingSword) {
+    // Update sprite animation only if the player is moving
+    if (isMoving) {
         player.spriteCounter++;
         if (player.spriteCounter > 10) {
             player.spriteNum = player.spriteNum === 1 ? 2 : 1;
             player.spriteCounter = 0;
         }
-    } else if (!player.isCastingSpell && !player.isSwingingSword) {
+    } else {
         player.spriteNum = 1;
     }
 }
 
+// Render game objects
 function render() {
     const tileSize = getTileSize();
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw map
@@ -425,17 +371,11 @@ function render() {
 
     // Draw player
     let playerImage;
-    if (player.isCastingSpell) {
-        playerImage = player.spellFrame === 1 ? assets.spells.spell1 : assets.spells.spell2;
-    } else if (player.isSwingingSword) {
-        playerImage = player.swordFrame === 1 ? assets.swords.sword1 : assets.swords.sword2;
-    } else {
-        switch (player.direction) {
-            case 'up': playerImage = player.spriteNum === 1 ? assets.player.up1 : assets.player.up2; break;
-            case 'down': playerImage = player.spriteNum === 1 ? assets.player.down1 : assets.player.down2; break;
-            case 'left': playerImage = player.spriteNum === 1 ? assets.player.left1 : assets.player.left2; break;
-            case 'right': playerImage = player.spriteNum === 1 ? assets.player.right1 : assets.player.right2; break;
-        }
+    switch (player.direction) {
+        case 'up': playerImage = player.spriteNum === 1 ? assets.player.up1 : assets.player.up2; break;
+        case 'down': playerImage = player.spriteNum === 1 ? assets.player.down1 : assets.player.down2; break;
+        case 'left': playerImage = player.spriteNum === 1 ? assets.player.left1 : assets.player.left2; break;
+        case 'right': playerImage = player.spriteNum === 1 ? assets.player.right1 : assets.player.right2; break;
     }
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
 
@@ -448,6 +388,7 @@ function render() {
 window.addEventListener('keydown', (e) => {
     keysPressed[e.key] = true;
 });
+
 window.addEventListener('keyup', (e) => {
     keysPressed[e.key] = false;
 });
@@ -520,3 +461,5 @@ async function initGame() {
 }
 
 initGame();
+
+
