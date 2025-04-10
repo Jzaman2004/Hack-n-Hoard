@@ -1,3 +1,4 @@
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -172,7 +173,6 @@ function checkCollision(entity, map, objects) {
     return false; // No collision
 }
 
-// Object collision detection
 function checkObjectCollision(player, objects) {
     const tileSize = getTileSize();
     for (let obj of objects) {
@@ -195,26 +195,26 @@ function pickUpObject(obj) {
         return;
     }
     console.log("Picked up object:", obj);
-
     switch (obj.type) {
         case 'key':
-            player.hasKey++;
-            removeObject(obj);
-            showMessage("You got a Key!");
-            playSound(sounds.coin);
-            break;
-
-        case 'door':
-            if (player.hasKey > 0) {
-                player.hasKey--;
+                player.hasKey++;
                 removeObject(obj);
-                showMessage("Door Opened!");
-                playSound(sounds.unlock);
-            } else {
-                showMessage("You need a Key!");
-            }
-            break;
-
+                showMessage("You got a Key!");
+                playSound(sounds.coin);
+                console.log("Keys after pickup:", player.hasKey); // Debugging line
+                break;
+    case 'door':
+    console.log("Interacting with door. Keys before:", player.hasKey); // Debugging line
+    if (player.hasKey > 0) {
+        player.hasKey--;
+        removeObject(obj);
+        showMessage("Door Opened!");
+        playSound(sounds.unlock);
+        console.log("Door removed. Keys after:", player.hasKey); // Debugging line
+    } else {
+        showMessage("You need a Key!");
+    }
+    break;
         case 'boots':
             player.speed += 1;
             player.hasBoots = true;
@@ -222,18 +222,17 @@ function pickUpObject(obj) {
             showMessage("Speed Up!");
             playSound(sounds.powerup);
             break;
-
         case 'chest':
             showMessage("Treasure Found!");
             playSound(sounds.fanfare);
             setTimeout(() => alert("Congratulations! You found the treasure!"), 1000);
             stopMusic();
             break;
-
         default:
             console.warn("Unknown object type:", obj.type);
     }
 }
+
 
 // Remove object from the game
 function removeObject(obj) {
@@ -321,8 +320,8 @@ function update(deltaTime) {
         player.y = newY;
     }
 
-    // Check object collision
     const collidedObject = checkObjectCollision(player, objects);
+    console.log("Collided object:", collidedObject); // Debugging line
     pickUpObject(collidedObject);
 
     // Update sprite animation only if the player is moving
@@ -444,14 +443,14 @@ async function initGame() {
 
     // Add objects
     objects.push(
-        { type: 'key', x: tileSize * 21, y: tileSize * 9 },
-        { type: 'key', x: tileSize * 8, y: tileSize * 22 },
-        { type: 'key', x: tileSize * 23, y: tileSize * 23 },
-        { type: 'door', x: tileSize * 6, y: tileSize * 13, collision: true },
-        { type: 'door', x: tileSize * 3, y: tileSize * 18, collision: true },
-        { type: 'door', x: tileSize * 2, y: tileSize * 20, collision: true },
-        { type: 'chest', x: tileSize * 4, y: tileSize * 23 },
-        { type: 'boots', x: tileSize * 9, y: tileSize * 5 }
+        { type: 'key', x: tileSize * 3, y: tileSize * 11 },
+        { type: 'key', x: tileSize * 22, y: tileSize * 15 },
+        { type: 'key', x: tileSize * 1, y: tileSize * 1 },
+        { type: 'door', x: tileSize * 1, y: tileSize * 8, collision: false },
+        { type: 'door', x: tileSize * 9, y: tileSize * 14, collision: false },
+        { type: 'door', x: tileSize * 30, y: tileSize * 7, collision: false },
+        { type: 'chest', x: tileSize * 12, y: tileSize * 14 },
+        { type: 'boots', x: tileSize * 4, y: tileSize * 5 }
     );
 
     // Start background music
