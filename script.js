@@ -42,6 +42,11 @@ let player = {
     spriteCounter: 0,
     spriteNum: 1,
     solidArea: { x: 8, y: 16, width: 32, height: 32 },
+    // New properties for spell and sword animations
+    isCastingSpell: false,
+    spellFrame: 1, // Alternates between 1 and 2
+    isSwingingSword: false,
+    swordFrame: 1, // Alternates between 1 and 2
 };
 
 // Load assets
@@ -69,6 +74,14 @@ const assets = {
         door: new Image(),
         boots: new Image(),
         chest: new Image(),
+    },
+    spells: {
+        spell1: new Image(),
+        spell2: new Image(),
+    },
+    swords: {
+        sword1: new Image(),
+        sword2: new Image(),
     },
 };
 
@@ -103,6 +116,8 @@ const sounds = {
     unlock: new Audio('assets/sounds/unlock.wav'),
     powerup: new Audio('assets/sounds/powerup.wav'),
     fanfare: new Audio('assets/sounds/fanfare.wav'),
+    spell: new Audio('assets/sounds/spell.wav'),
+    sword: new Audio('assets/sounds/sword.wav'),
 };
 
 // Load map
@@ -199,6 +214,7 @@ function pickUpObject(obj) {
         case 'key':
             player.hasKey++;
             removeObject(obj);
+            obj.collision = true; 
             showMessage("You got a Key!");
             playSound(sounds.coin);
             console.log("Keys after pickup:", player.hasKey); // Debugging line
@@ -345,6 +361,32 @@ function update(deltaTime) {
     } else {
         player.spriteNum = 1;
     }
+
+    // Update sword animation (e key)
+    if (keysPressed['e']) {
+        player.isSwingingSword = true;
+        player.spriteCounter++;
+        if (player.spriteCounter > 10) {
+            player.swordFrame = player.swordFrame === 1 ? 2 : 1;
+            player.spriteCounter = 0;
+            playSound(sounds.sword); // Play sword sound
+        }
+    } else {
+        player.isSwingingSword = false;
+    }
+
+    // Update spell animation (q key)
+    if (keysPressed['q']) {
+        player.isCastingSpell = true;
+        player.spriteCounter++;
+        if (player.spriteCounter > 10) {
+            player.spellFrame = player.spellFrame === 1 ? 2 : 1;
+            player.spriteCounter = 0;
+            playSound(sounds.spell); // Play spell sound
+        }
+    } else {
+        player.isCastingSpell = false;
+    }
 }
 
 // Render game objects
@@ -383,11 +425,17 @@ function render() {
 
     // Draw player
     let playerImage;
-    switch (player.direction) {
-        case 'up': playerImage = player.spriteNum === 1 ? assets.player.up1 : assets.player.up2; break;
-        case 'down': playerImage = player.spriteNum === 1 ? assets.player.down1 : assets.player.down2; break;
-        case 'left': playerImage = player.spriteNum === 1 ? assets.player.left1 : assets.player.left2; break;
-        case 'right': playerImage = player.spriteNum === 1 ? assets.player.right1 : assets.player.right2; break;
+    if (player.isCastingSpell) {
+        playerImage = player.spellFrame === 1 ? assets.spells.spell1 : assets.spells.spell2;
+    } else if (player.isSwingingSword) {
+        playerImage = player.swordFrame === 1 ? assets.swords.sword1 : assets.swords.sword2;
+    } else {
+        switch (player.direction) {
+            case 'up': playerImage = player.spriteNum === 1 ? assets.player.up1 : assets.player.up2; break;
+            case 'down': playerImage = player.spriteNum === 1 ? assets.player.down1 : assets.player.down2; break;
+            case 'left': playerImage = player.spriteNum === 1 ? assets.player.left1 : assets.player.left2; break;
+            case 'right': playerImage = player.spriteNum === 1 ? assets.player.right1 : assets.player.right2; break;
+        }
     }
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
 
@@ -457,8 +505,8 @@ async function initGame() {
         { type: 'key', x: tileSize * 3, y: tileSize * 11 },
         { type: 'key', x: tileSize * 22, y: tileSize * 15 },
         { type: 'key', x: tileSize * 1, y: tileSize * 1 },
-        { type: 'door', x: tileSize * 1, y: tileSize * 8, collision: false },
-        { type: 'door', x: tileSize * 9, y: tileSize * 14, collision: false },
+        { type: 'door', x: tileSize * 1, y: tileSize * 8, collision: true },
+        { type: 'door', x: tileSize * 9, y: tileSize * 14, collision: true },
         { type: 'door', x: tileSize * 30, y: tileSize * 6, collision: true },
         { type: 'chest', x: tileSize * 12, y: tileSize * 14 },
         { type: 'boots', x: tileSize * 4, y: tileSize * 5 }
