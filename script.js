@@ -197,24 +197,34 @@ function pickUpObject(obj) {
     console.log("Picked up object:", obj);
     switch (obj.type) {
         case 'key':
-                player.hasKey++;
+            player.hasKey++;
+            removeObject(obj);
+            showMessage("You got a Key!");
+            playSound(sounds.coin);
+            console.log("Keys after pickup:", player.hasKey); // Debugging line
+
+            // Disable collision for all doors
+            objects.forEach(door => {
+                if (door.type === 'door') {
+                    door.collision = false;
+                    console.log("Door collision disabled for:", door);
+                }
+            });
+            break;
+
+        case 'door':
+            console.log("Interacting with door. Keys before:", player.hasKey); // Debugging line
+            if (player.hasKey > 0) {
+                player.hasKey--;
                 removeObject(obj);
-                showMessage("You got a Key!");
-                playSound(sounds.coin);
-                console.log("Keys after pickup:", player.hasKey); // Debugging line
-                break;
-    case 'door':
-    console.log("Interacting with door. Keys before:", player.hasKey); // Debugging line
-    if (player.hasKey > 0) {
-        player.hasKey--;
-        removeObject(obj);
-        showMessage("Door Opened!");
-        playSound(sounds.unlock);
-        console.log("Door removed. Keys after:", player.hasKey); // Debugging line
-    } else {
-        showMessage("You need a Key!");
-    }
-    break;
+                showMessage("Door Opened!");
+                playSound(sounds.unlock);
+                console.log("Door removed. Keys after:", player.hasKey); // Debugging line
+            } else {
+                showMessage("You need a Key!");
+            }
+            break;
+
         case 'boots':
             player.speed += 1;
             player.hasBoots = true;
@@ -222,12 +232,14 @@ function pickUpObject(obj) {
             showMessage("Speed Up!");
             playSound(sounds.powerup);
             break;
+
         case 'chest':
             showMessage("Treasure Found!");
             playSound(sounds.fanfare);
             setTimeout(() => alert("Congratulations! You found the treasure!"), 1000);
             stopMusic();
             break;
+
         default:
             console.warn("Unknown object type:", obj.type);
     }
@@ -447,7 +459,7 @@ async function initGame() {
         { type: 'key', x: tileSize * 1, y: tileSize * 1 },
         { type: 'door', x: tileSize * 1, y: tileSize * 8, collision: false },
         { type: 'door', x: tileSize * 9, y: tileSize * 14, collision: false },
-        { type: 'door', x: tileSize * 30, y: tileSize * 7, collision: false },
+        { type: 'door', x: tileSize * 30, y: tileSize * 6, collision: true },
         { type: 'chest', x: tileSize * 12, y: tileSize * 14 },
         { type: 'boots', x: tileSize * 4, y: tileSize * 5 }
     );
