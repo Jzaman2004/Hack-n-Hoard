@@ -109,6 +109,11 @@ assets.objects.door.src = 'assets/images/door.png';
 assets.objects.boots.src = 'assets/images/boots.png';
 assets.objects.chest.src = 'assets/images/chest.png';
 
+assets.spells.spell1.src = 'assets/images/spell1.png';
+assets.spells.spell2.src = 'assets/images/spell2.png';
+assets.swords.sword1.src = 'assets/images/sword1.png';
+assets.swords.sword2.src = 'assets/images/sword2.png';
+
 // Load sounds
 const sounds = {
     background: new Audio('assets/sounds/background.wav'),
